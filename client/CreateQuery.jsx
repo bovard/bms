@@ -106,6 +106,7 @@ var CreateNew = React.createClass({
             <br />
             {populationForm}
             <br />
+            <Well>
             <form className="form-horizontal" onSubmit={this.addField}>
                 <Input
                     type="select"
@@ -121,6 +122,7 @@ var CreateNew = React.createClass({
                     help="Add the selected criteria"
                     value="Add" />
             </form>
+            </Well>
             </Well>
         )
     }
