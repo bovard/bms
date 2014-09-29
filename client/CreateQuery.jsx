@@ -1,10 +1,13 @@
 /** @jsx React.DOM */
 var React = require('react');
 
+var Col = require('react-bootstrap').Col;
 var Input = require('react-bootstrap').Input;
+var Row = require('react-bootstrap').Row;
 var Well = require('react-bootstrap').Well;
 
 var columns = require('./columns');
+var constants = require('./constants');
 
 var CreateNew = React.createClass({
     propTypes: {
@@ -42,8 +45,7 @@ var CreateNew = React.createClass({
 
         var inputs = this.state.columns.map(function(key) {
             column = columns[key];
-            if (column.type == 'numeric_ints') {
-                console.log('numeric');
+            if (column.data.type == constants.DATA_TYPES.NUMERIC_INTS) {
                 return (
                     <Input
                         type="text"
@@ -53,8 +55,7 @@ var CreateNew = React.createClass({
                         help={column.description}
                         ref={key} />
                 );
-            } else if (column.data.type == 'numeric') {
-                console.log('value');
+            } else if (column.data.type == constants.DATA_TYPES.NUMERIC) {
                 var options = Object.keys(column.data.defined).map(function(key) {
                     return (
                         <option key={key} value={key}>{key} - {column.data.defined[key]}</option>
@@ -77,17 +78,35 @@ var CreateNew = React.createClass({
             }
         });
 
-        return (
-            <Well>
-            <form title="Create A Query!" className="form-horizontal" onSubmit={this.handleSubmit}>
-                {inputs}
-                <Input type="submit"
+        var populationForm;
+        if (this.state.columns.length === 0) {
+            populationForm = (
+                <Row>
+                    <Col xsOffset={2}>
+                        <h5>Add a property to get started</h5>
+                    </Col>
+                </Row>
+            );
+        } else {
+            populationForm = (
+                <form className="form-horizontal" onSubmit={this.handleSubmit}>
+                    {inputs}
+                    <Input type="submit"
                     className="btn-success"
                     wrapperClassName="col-xs-offset-2 col-xs-4"
                     help="Compares the average income of the selected subpopulation against the average income from 1972-2013"
                     value="Compare" />
-            </form>
-            <form title="Add a field!" className="form-horizontal" onSubmit={this.addField}>
+                </form>
+            );
+        }
+
+        return (
+            <Well>
+            <h2>Define a population</h2>
+            <br />
+            {populationForm}
+            <br />
+            <form className="form-horizontal" onSubmit={this.addField}>
                 <Input
                     type="select"
                     label="Field"

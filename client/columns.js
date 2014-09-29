@@ -1,15 +1,9 @@
-var DATA_TYPES = {
-    NUMERIC: 'numeric',
-    NUMERIC_INTS: 'numeric_ints'
-};
+var constants = require('./constants');
 
-var VALUES = {
-    NAP: "Not applicable",
-    DK: "Don't know",
-    NA: "Not avaliable",
-    YES: "Yes",
-    NO: "No"
-};
+
+var DATA_TYPES = constants.DATA_TYPES;
+var VALUES = constants.VALUES;
+
 
 module.exports = {
     agewed: {
