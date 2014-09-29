@@ -4,70 +4,103 @@ var React = require('react');
 var Input = require('react-bootstrap').Input;
 var Well = require('react-bootstrap').Well;
 
+var columns = require('./columns');
 
 var CreateNew = React.createClass({
     propTypes: {
         createQuery: React.PropTypes.func.isRequired
     },
+    getInitialState: function() {
+        return ({
+            columns: []
+        });
+    },
     handleSubmit: function() {
-        this.props.createQuery(
-            parseInt(this.refs.width.getValue()),
-            parseInt(this.refs.height.getValue()),
-            this.refs.symmetry.getValue(),
-            this.refs.name.getValue(),
-            this.refs.mirrored.getValue()
-        );
+        // TODO: propagate the data
+        this.props.createQuery();
+        return false;
+    },
+    addField: function() {
+        var columns = this.state.columns;
+        columns.push(this.refs.field.getValue());
+        this.setState({
+            columns: columns
+        });
         return false;
     },
     render: function() {
+        var column;
+        var unused = Object.keys(columns).filter(function(key) {
+            return this.state.columns.indexOf(key) === -1;
+        }.bind(this));
+        var fieldOptions = unused.map(function(key) {
+            column = columns[key];
+            return (
+                <option key={key} value={key}>{key} - {column.description}</option>
+            );
+        });
+
+        var inputs = this.state.columns.map(function(key) {
+            column = columns[key];
+            if (column.type == 'numeric_ints') {
+                console.log('numeric');
+                return (
+                    <Input
+                        type="text"
+                        label={key}
+                        labelClassName="col-xs-2"
+                        wrapperClassName="col-xs-4"
+                        help={column.description}
+                        ref={key} />
+                );
+            } else if (column.data.type == 'numeric') {
+                console.log('value');
+                var options = Object.keys(column.data.defined).map(function(key) {
+                    return (
+                        <option key={key} value={key}>{key} - {column.data.defined[key]}</option>
+                    );
+                });
+
+                return (
+                    <Input
+                        type="select"
+                        label={key}
+                        labelClassName="col-xs-2"
+                        wrapperClassName="col-xs-4"
+                        help={column.description}
+                        ref={key}>
+                    {options}
+                    </Input>
+                );
+
+
+            }
+        });
+
         return (
             <Well>
-            <h2>Create a Query!</h2>
-            <br />
             <form title="Create A Query!" className="form-horizontal" onSubmit={this.handleSubmit}>
-                <Input
-                    type="text"
-                    label="Map Name"
-                    defaultValue="test"
-                    labelClassName="col-xs-2"
-                    wrapperClassName="col-xs-4"
-                    ref="name" />
-                <Input
-                    type="text"
-                    label="Map Width"
-                    defaultValue="20"
-                    labelClassName="col-xs-2"
-                    wrapperClassName="col-xs-4"
-                    help="Must be between 20 and 70 inclusive to be official"
-                    ref="width" />
-                <Input
-                    type="text"
-                    label="Map Height"
-                    defaultValue="20"
-                    labelClassName="col-xs-2"
-                    wrapperClassName="col-xs-4"
-                    help="Must be between 20 and 70 inclusive to be official"
-                    ref="height" />
+                {inputs}
+                <Input type="submit"
+                    className="btn-success"
+                    wrapperClassName="col-xs-offset-2 col-xs-4"
+                    help="Compares the average income of the selected subpopulation against the average income from 1972-2013"
+                    value="Compare" />
+            </form>
+            <form title="Add a field!" className="form-horizontal" onSubmit={this.addField}>
                 <Input
                     type="select"
-                    label="Symmetry"
+                    label="Field"
                     labelClassName="col-xs-2"
                     wrapperClassName="col-xs-4"
-                    ref="symmetry">
-                    {options}
-                </Input>
-                <Input
-                    type="select"
-                    label="Mirror Mode"
-                    labelClassName="col-xs-2"
-                    wrapperClassName="col-xs-4"
-                    ref="mirrored">
-                    {trueFalse}
+                    ref="field">
+                    {fieldOptions}
                 </Input>
                 <Input type="submit"
                     className="btn-success"
                     wrapperClassName="col-xs-offset-2 col-xs-2"
-                    value="Create New Map" />
+                    help="Add the selected criteria"
+                    value="Add" />
             </form>
             </Well>
         )

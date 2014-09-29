@@ -7,7 +7,7 @@ Backbone.$ = $;
 var Well = require('react-bootstrap').Well;
 
 var MainNav = require('./MainNav');
-var CommentList = require('./CommentList')
+var CreateQuery = require('./CreateQuery');
 
 
 var InterfaceComponent = React.createClass({
@@ -28,9 +28,7 @@ var InterfaceComponent = React.createClass({
         if (this.props.router.current[0] == 'home') {
             nav = 1;
             content = (
-                <Well>
-                    <p>Welcome!</p>
-                </Well>
+                <CreateQuery />
             );
         }
         else if (this.props.router.current[0] == 'about') {
