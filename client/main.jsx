@@ -24,6 +24,7 @@ var InterfaceComponent = React.createClass({
     render: function() {
         var nav = 0;
         var content;
+
         if (this.props.router.current[0] == 'home') {
             nav = 1;
             content = (
@@ -32,7 +33,7 @@ var InterfaceComponent = React.createClass({
                 </Well>
             );
         }
-        if (this.props.router.current[0] == 'notes') {
+        else if (this.props.router.current[0] == 'about') {
             nav = 2;
             content = (
                 <Well>
@@ -40,14 +41,7 @@ var InterfaceComponent = React.createClass({
                 </Well>
             );
         }
-        if (this.props.router.current[0] == 'todos') {
-            nav = 3;
-            content = (
-                <Well>
-                    <p>TODO: replace with todos react tutorial</p>
-                </Well>
-            );
-        }
+
         return (
             <div className="content">
                 <MainNav current={nav} />
